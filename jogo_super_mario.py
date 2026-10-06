@@ -19,6 +19,8 @@ GRAVIDADE = 0.8
 FORCA_PULO = -15
 mario_no_chao = False
 
+mario_dir = 1
+
 botao_esq = pygame.Rect(20, 300, 60, 60)
 botao_dir = pygame.Rect(90, 300, 60, 60)
 botao_pulo = pygame.Rect(580, 300, 60, 60)
@@ -33,6 +35,26 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.FINGERDOWN:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT]:
+                mover_esq = True
+            if keys[pygame.K_RIGHT]:
+                mover_dir = True
+            if keys[pygame.K_UP] or keys[pygame.K_SPACE]:
+                pular = True
+
+            if mover_esq:
+                mario_dir = -1
+            if mario_dir:
+                mario_dir = 1
+
+            if mario_dir == -1:
+                mario_flip = pygame.transform.flip(mario_img, True, False)
+                tamanho_tela.blit(mario_flip, (mario_x, mario_y))
+            else:
+                tamanho_tela.blit(mario_img, (mario_x, mario_y))
+
+
             x = int(event.x * 700)
             y = int(event.y * 400)
             if botao_esq.collidepoint(x, y):

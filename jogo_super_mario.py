@@ -14,6 +14,11 @@ mario_img = pygame.transform.scale(mario_img, (30, 40))
 mario_x = 300
 mario_y = 310
 
+mario_vel_y = 0
+GRAVIDADE = 0.8
+FORCA_PULO = -15
+mario_no_chao = False
+
 botao_esq = pygame.Rect(20, 300, 60, 60)
 botao_dir = pygame.Rect(90, 300, 60, 60)
 botao_pulo = pygame.Rect(580, 300, 60, 60)
@@ -42,6 +47,18 @@ while running:
     if mover_dir:
         mario_x += 5
 
+    if pular and mario_no_chao:
+        mario_vel_y = FORCA_PULO
+        mario_no_chao = False
+
+    mario_vel_y += GRAVIDADE
+    mario_y += mario_vel_y
+
+    mario_no_chao = False
+    if mario_y + 40 >= 350:
+        mario_y = 350 - 40
+        mario_vel_y = 0
+        mario_no_chao = True
 
     tamanho_tela.fill((135, 206, 235))
     pygame.draw.rect(tamanho_tela, (139, 69, 19), (0, 350, 700, 50))

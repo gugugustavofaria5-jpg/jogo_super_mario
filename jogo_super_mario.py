@@ -9,6 +9,12 @@ pygame.display.set_caption("MARIO_O_JOGO")
 chao_img = pygame.image.load("/home/gustavo/Imagens/Captura de tela de 2026-10-06 01-54-33.png")
 chao_img = pygame.transform.scale(chao_img, (700, 50))
 
+mario_img = pygame.image.load("/home/gustavo/Imagens/imagem do mario.png")
+mario_img = pygame.transform.scale(mario_img, (30, 40))
+
+mario_x = 100
+mario_y = 310
+
 botao_esq = pygame.Rect(20, 300, 60, 60)
 botao_dir = pygame.Rect(90, 300, 60, 60)
 botao_pulo = pygame.Rect(580, 300, 60, 60)
@@ -24,7 +30,8 @@ while running:
 
     pygame.draw.rect(tamanho_tela, (139, 69, 19), (0, 350, 700, 50))
 
-    tamanho_tela.blit(chao_img, (0, 350))   
+    tamanho_tela.blit(chao_img, (0, 350))
+    tamanho_tela.blit(mario_img, (mario_x, mario_y))   
 
     pygame.display.flip()
 

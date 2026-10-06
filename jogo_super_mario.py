@@ -35,40 +35,51 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.FINGERDOWN:
-
-            if mover_esq:
-                mario_dir = -1
-            if mario_dir:
-                mario_dir = 1
-
-            if mario_dir == -1:
-                mario_flip = pygame.transform.flip(mario_img, True, False)
-                tamanho_tela.blit(mario_flip, (mario_x, mario_y))
-            else:
-                tamanho_tela.blit(mario_img, (mario_x, mario_y))
-
-
             x = int(event.x * 700)
             y = int(event.y * 400)
             if botao_esq.collidepoint(x, y):
                 mover_esq = True
-            if botao_dir.collidepoint(x, y):
+            if botao_dir.collidepoint(x, y):                  
                 mover_dir = True
             if botao_pulo.collidepoint(x, y):
                 pular = True
 
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            mover_esq = True
-        if keys[pygame.K_RIGHT]:
-            mover_dir = True
-        if keys[pygame.K_UP] or keys[pygame.K_SPACE]:
-            pular = True
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        mover_esq = True
+    if keys[pygame.K_RIGHT]:
+        mover_dir = True
+    if keys[pygame.K_UP] or keys[pygame.K_SPACE]:
+                pular = True
 
     if mover_esq:
         mario_x -= 5
+        mario_dir = -1
     if mover_dir:
         mario_x += 5
+        mario_dir = 1
+    if pular and mario_no_chao:
+        mario_vel_y = FORCA_PULO
+        mario_no_chao = False
+
+    mario_vel_y += GRAVIDADE
+    mario_y += mario_vel_y
+
+
+    mario_no_chao = False
+    if mario_y + 40 >= 350:
+        mario_y = 350 - 40
+        mario_vel_y = 0
+        mario_no_chao = True
+
+
+    if mario_dir == -1:
+        mario_flip = pygame.transform.flip(mario_img, True, False)
+        tamanho_tela.blit(mario_flip, (mario_x, mario_y))
+    else:
+            tamanho_tela.blit(mario_img, (mario_x, mario_y))
+
 
     if pular and mario_no_chao:
         mario_vel_y = FORCA_PULO
@@ -77,11 +88,6 @@ while running:
     mario_vel_y += GRAVIDADE
     mario_y += mario_vel_y
 
-    mario_no_chao = False
-    if mario_y + 40 >= 350:
-        mario_y = 350 - 40
-        mario_vel_y = 0
-        mario_no_chao = True
 
     tamanho_tela.fill((135, 206, 235))
     pygame.draw.rect(tamanho_tela, (139, 69, 19), (0, 350, 700, 50))

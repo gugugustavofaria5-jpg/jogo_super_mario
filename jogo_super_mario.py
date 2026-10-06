@@ -35,13 +35,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.FINGERDOWN:
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT]:
-                mover_esq = True
-            if keys[pygame.K_RIGHT]:
-                mover_dir = True
-            if keys[pygame.K_UP] or keys[pygame.K_SPACE]:
-                pular = True
 
             if mover_esq:
                 mario_dir = -1
@@ -63,6 +56,14 @@ while running:
                 mover_dir = True
             if botao_pulo.collidepoint(x, y):
                 pular = True
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            mover_esq = True
+        if keys[pygame.K_RIGHT]:
+            mover_dir = True
+        if keys[pygame.K_UP] or keys[pygame.K_SPACE]:
+            pular = True
 
     if mover_esq:
         mario_x -= 5

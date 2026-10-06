@@ -1,4 +1,5 @@
 import pygame
+import sys
 
 pygame.init()
 
@@ -11,6 +12,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+
+    tamanho_tela.fill((135, 206, 235))
     pygame.display.flip()
 
 pygame.quit()

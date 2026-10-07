@@ -53,25 +53,7 @@ while running:
     if keys[pygame.K_UP] or keys[pygame.K_SPACE]:
                 pular = True
 
-    if mover_esq:
-        mario_x -= 5
-        mario_dir = -1
-    if mover_dir:
-        mario_x += 5
-        mario_dir = 1
-    if pular and mario_no_chao:
-        mario_vel_y = FORCA_PULO
-        mario_no_chao = False
-
-    mario_vel_y += GRAVIDADE
-    mario_y += mario_vel_y
-
-
-    mario_no_chao = False
-    if mario_y + 40 >= 350:
-        mario_y = 350 - 40
-        mario_vel_y = 0
-        mario_no_chao = True
+    
 
 
     if mario_dir == -1:

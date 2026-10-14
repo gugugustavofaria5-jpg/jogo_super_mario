@@ -1,6 +1,9 @@
 import pygame
 
 pygame.init()
+clock = pygame.time.Clock()
+
+
 
 tamanho_tela = pygame.display.set_mode((700, 400))
 pygame.display.set_caption("MARIO_O_JOGO")
@@ -16,11 +19,16 @@ mario_y = 310
 mario_vel_x = 0
 mario_vel_y = 0
 
-ACEL = 0.3
-FRICAO = 0.85
-VEL_MAX = 4
-GRAVIDADE = 0.8
-FORCA_PULO = -15
+ACEL = 0.45
+FRICAO = 0.80
+VEL_MAX = 4.5
+ACEL_AR = 0.25
+
+GRAVIDADE = 0.45
+GRAVIDADE_QUEDA = 0.75
+FORCA_PULO = -11
+VEL_QUEDA_MAX = 12
+CORTE_PULO = 0.45
 
 mario_no_chao = False
 mario_dir = 1
@@ -59,36 +67,25 @@ while running:
         pular = True
 
     if mover_esq:
-        mario_vel_x -= ACEL
+        mario_vel_x = -ACEL
         mario_dir = -1
-    if mover_dir:
-        mario_vel_x += ACEL
+
+    elif mover_dir:
+        mario_vel_x = ACEL
         mario_dir = 1
+
     else:
         mario_vel_x *= FRICAO
+
 
     mario_vel_x = max(-VEL_MAX, min(VEL_MAX, mario_vel_x))
     mario_x += mario_vel_x
 
 
-    if pular:
-        if mario_no_chao:
-            mario_vel_y = FORCA_PULO
-            mario_no_chao = False
-        elif mario_vel_y < 0:
-            mario_vel_y += 0.5
-
-    
-    if mario_dir == -1:
-        mario_flip = pygame.transform.flip(mario_img, True, False)
-        tamanho_tela.blit(mario_flip, (mario_x, mario_y))
-    else:
-            tamanho_tela.blit(mario_img, (mario_x, mario_y))
-
-
     if pular and mario_no_chao:
         mario_vel_y = FORCA_PULO
         mario_no_chao = False
+
 
     mario_vel_y += GRAVIDADE
     mario_y += mario_vel_y
@@ -114,7 +111,10 @@ while running:
     pygame.draw.rect(tamanho_tela, (200, 200, 200), botao_dir)
     pygame.draw.rect(tamanho_tela, (200, 200, 200), botao_pulo)
 
+    clock.tick(60)
     pygame.display.flip()
 
 
 pygame.quit()
+
+

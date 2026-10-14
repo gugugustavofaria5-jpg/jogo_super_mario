@@ -66,16 +66,28 @@ while running:
     if keys[pygame.K_UP] or keys[pygame.K_SPACE]:
         pular = True
 
+    aceleracao_atual = ACEL if mario_no_chao else ACEL_AR
+
     if mover_esq:
-        mario_vel_x = -ACEL
+        mario_vel_x -= aceleracao_atual
         mario_dir = -1
 
     elif mover_dir:
-        mario_vel_x = ACEL
+        mario_vel_x += aceleracao_atual
         mario_dir = 1
 
     else:
-        mario_vel_x *= FRICAO
+        if mario_no_chao:
+            mario_vel_x *= 0.98
+
+    mario_vel_x = max(-VEL_MAX, min(VEL_MAX, mario_vel_x))
+
+    if abs(mario_vel_x) < 0.05 and not mover_esq and not mover_dir:
+        mario_vel_x = 0
+
+    mario_x += mario_vel_x
+
+    mario_x = max(0, min(700 - 30, mario_x))
 
 
     mario_vel_x = max(-VEL_MAX, min(VEL_MAX, mario_vel_x))
@@ -86,16 +98,19 @@ while running:
         mario_vel_y = FORCA_PULO
         mario_no_chao = False
 
+    if mario_vel_y < 0:
+        mario_vel_y += GRAVIDADE
+    else:
+        mario_vel_y += GRAVIDADE_QUEDA
 
-    mario_vel_y += GRAVIDADE
     mario_y += mario_vel_y
 
     mario_no_chao = False
+
     if mario_y + 40 >= 350:
-        mario_y = 350 - 40
+        mario_y = 310
         mario_vel_y = 0
         mario_no_chao = True
-
 
     tamanho_tela.fill((135, 206, 235))
     pygame.draw.rect(tamanho_tela, (139, 69, 19), (0, 350, 700, 50))

@@ -1,12 +1,20 @@
+# ==============================
+# IMPORTAÇÃO E INICIALIZAÇÃO
+# ==============================
 import pygame
 
 pygame.init()
 clock = pygame.time.Clock()
-
-
-
+# ==============================
+# CONFIGURAÇÃO DA TELA
+# ==============================
 tamanho_tela = pygame.display.set_mode((700, 400))
 pygame.display.set_caption("MARIO_O_JOGO")
+
+# ==============================
+# CARREGAMENTO DAS IMAGENS
+# ==============================
+
 
 chao_img = pygame.image.load("/home/gustavo/Imagens/Captura de tela de 2026-10-06 01-54-33.png")
 chao_img = pygame.transform.scale(chao_img, (700, 50))
@@ -14,10 +22,21 @@ chao_img = pygame.transform.scale(chao_img, (700, 50))
 mario_img = pygame.image.load("/home/gustavo/Imagens/imagem de mario 2.0.webp")
 mario_img = pygame.transform.scale(mario_img, (30, 40))
 
+# ==============================
+# VARIÁVEIS DO MARIO
+# ==============================
+
 mario_x = 300
 mario_y = 310
 mario_vel_x = 0
 mario_vel_y = 0
+
+mario_no_chao = False
+mario_dir = 1
+
+# ==============================
+# CONFIGURAÇÕES DA MOVIMENTAÇÃO
+# ==============================
 
 ACEL = 0.45
 FRICAO = 0.80
@@ -30,23 +49,41 @@ FORCA_PULO = -11
 VEL_QUEDA_MAX = 12
 CORTE_PULO = 0.45
 
-mario_no_chao = False
-mario_dir = 1
+# ==============================
+# BOTÕES DE CONTROLE
+# ==============================
 
 botao_esq = pygame.Rect(20, 300, 60, 60)
 botao_dir = pygame.Rect(90, 300, 60, 60)
 botao_pulo = pygame.Rect(580, 300, 60, 60)
 
+# ==============================
+# LOOP PRINCIPAL DO JOGO
+# ==============================
+
 running = True
+
 while running:
+
+    # ------------------------------
+    # ESTADO DOS CONTROLES
+    # ------------------------------
+
     mover_esq = False
     mover_dir = False
     pular = False
 
+    # ------------------------------
+    # CAPTURA DOS EVENTOS
+    # ------------------------------
+
     for event in pygame.event.get():
+
+        # Fechar o jogo
         if event.type == pygame.QUIT:
             running = False
 
+        # Detectar toques na tela
         if event.type == pygame.FINGERDOWN:
             x = int(event.x * 700)
             y = int(event.y * 400)
@@ -57,7 +94,9 @@ while running:
             if botao_pulo.collidepoint(x, y):
                 pular = True
 
-
+    # ------------------------------
+    # CONTROLES DO TECLADO
+    # ------------------------------
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
         mover_esq = True
@@ -67,6 +106,10 @@ while running:
         pular = True
 
     aceleracao_atual = ACEL if mario_no_chao else ACEL_AR
+
+    # ------------------------------
+    # MOVIMENTAÇÃO HORIZONTAL
+    # ------------------------------
 
     if mover_esq:
         mario_vel_x -= aceleracao_atual
@@ -80,10 +123,13 @@ while running:
         if mario_no_chao:
             mario_vel_x *= 0.98
 
+    # Limitar velocidade horizontal
     mario_vel_x = max(-VEL_MAX, min(VEL_MAX, mario_vel_x))
 
     if abs(mario_vel_x) < 0.05 and not mover_esq and not mover_dir:
         mario_vel_x = 0
+
+    # Atualizar posição horizontal
 
     mario_x += mario_vel_x
 
@@ -92,18 +138,29 @@ while running:
 
     mario_vel_x = max(-VEL_MAX, min(VEL_MAX, mario_vel_x))
     mario_x += mario_vel_x
-
+    
+    # ------------------------------
+    # PULO DO MARIO
+    # ------------------------------
 
     if pular and mario_no_chao:
         mario_vel_y = FORCA_PULO
         mario_no_chao = False
 
+    # ------------------------------
+    # PULO DO MARIO
+    # ------------------------------
+
     if mario_vel_y < 0:
         mario_vel_y += GRAVIDADE
     else:
         mario_vel_y += GRAVIDADE_QUEDA
-
     mario_y += mario_vel_y
+
+    # ------------------------------
+    # COLISÃO COM O CHÃO
+    # ------------------------------
+
 
     mario_no_chao = False
 
@@ -112,9 +169,17 @@ while running:
         mario_vel_y = 0
         mario_no_chao = True
 
+    # ------------------------------
+    # DESENHAR O CENÁRIO
+    # ------------------------------
+
     tamanho_tela.fill((135, 206, 235))
     pygame.draw.rect(tamanho_tela, (139, 69, 19), (0, 350, 700, 50))
     tamanho_tela.blit(chao_img, (0, 350))
+
+    # ------------------------------
+    # DESENHAR O MARIO
+    # ------------------------------
 
     if mario_dir == -1:
         mario_flip = pygame.transform.flip(mario_img, True, False)
@@ -122,14 +187,24 @@ while running:
     else:
         tamanho_tela.blit(mario_img, (mario_x, mario_y))
 
+    # ------------------------------
+    # DESENHAR OS BOTÕES
+    # ------------------------------
+
     pygame.draw.rect(tamanho_tela, (200, 200, 200), botao_esq)
     pygame.draw.rect(tamanho_tela, (200, 200, 200), botao_dir)
     pygame.draw.rect(tamanho_tela, (200, 200, 200), botao_pulo)
 
+    # ------------------------------
+    # ATUALIZAR O JOGO
+    # ------------------------------
+
     clock.tick(60)
     pygame.display.flip()
 
-
+# ==============================
+# ENCERRAR O PYGAME
+# ==============================
 pygame.quit()
 
 

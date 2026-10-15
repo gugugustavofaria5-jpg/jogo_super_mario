@@ -228,9 +228,6 @@ while running:
     # COLISÃO COM O CHÃO
     # ------------------------------
 
-
-    mario_no_chao = False
-
     if mario_y + 40 >= 350:
         mario_y = 310
         mario_vel_y = 0

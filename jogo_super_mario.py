@@ -158,7 +158,7 @@ while running:
         mario_no_chao = False
 
     # ------------------------------
-    # PULO DO MARIO
+    # GRAVIDADE E VELOCIDADE DE QUEDA
     # ------------------------------
 
     if mario_vel_y < 0:

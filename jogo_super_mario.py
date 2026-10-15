@@ -23,6 +23,15 @@ mario_img = pygame.image.load("/home/gustavo/Imagens/imagem de mario 2.0.webp")
 mario_img = pygame.transform.scale(mario_img, (30, 40))
 
 # ==============================
+# IMAGEM DOS BLOCOS
+# ==============================
+bloco_img = pygame.image.load(
+    "/home/gustavo/Imagens/bloco.png"
+).convert_alpha()
+
+bloco_img = pygame.transform.scale(bloco_img, (40, 30))
+
+# ==============================
 # VARIÁVEIS DO MARIO
 # ==============================
 
@@ -115,6 +124,15 @@ while running:
     aceleracao_atual = ACEL if mario_no_chao else ACEL_AR
 
     # ------------------------------
+    # PLATAFORMAS DE TIJOLOS
+    # ------------------------------
+    plataformas = [
+        pygame.Rect(150, 270, 120, 30),
+        pygame.Rect(330, 220, 120, 30),
+        pygame.Rect(500, 170, 120, 30),
+    ]
+
+    # ------------------------------
     # MOVIMENTAÇÃO HORIZONTAL
     # ------------------------------
 
@@ -193,6 +211,13 @@ while running:
     tamanho_tela.blit(chao_img, (0, 350))
 
     # ------------------------------
+    # DESENAHR BLOCOS
+    # ------------------------------
+    for plataforma in plataformas:
+        for x in range(plataforma.left, plataforma.right, 40):
+            tamanho_tela.blit(bloco_img, (x, plataforma.y))
+
+    # ------------------------------
     # DESENHAR O MARIO
     # ------------------------------
 
@@ -221,5 +246,3 @@ while running:
 # ENCERRAR O PYGAME
 # ==============================
 pygame.quit()
-
-

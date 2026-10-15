@@ -74,6 +74,15 @@ botao_pulo = pygame.Rect(580, 300, 60, 60)
 
 running = True
 
+# ------------------------------
+# PLATAFORMAS DE TIJOLOS
+# ------------------------------
+
+plataformas = [
+    pygame.Rect(150, 270, 120, 30),
+    pygame.Rect(330, 220, 120, 30),
+    pygame.Rect(500, 170, 120, 30),
+    ]
 while running:
 
     # ------------------------------
@@ -86,7 +95,7 @@ while running:
 
     # ------------------------------
     # CAPTURA DOS EVENTOS
-    # ------------------------------
+    # ------------------------------￼
 
     for event in pygame.event.get():
 
@@ -124,15 +133,6 @@ while running:
     aceleracao_atual = ACEL if mario_no_chao else ACEL_AR
 
     # ------------------------------
-    # PLATAFORMAS DE TIJOLOS
-    # ------------------------------
-    plataformas = [
-        pygame.Rect(150, 270, 120, 30),
-        pygame.Rect(330, 220, 120, 30),
-        pygame.Rect(500, 170, 120, 30),
-    ]
-
-    # ------------------------------
     # MOVIMENTAÇÃO HORIZONTAL
     # ------------------------------
 
@@ -166,7 +166,7 @@ while running:
 
     #Atualizar posição horizontal
     mario_x = max(0, min(700 - 30, mario_x))
-    
+
     # ------------------------------
     # PULO DO MARIO
     # ------------------------------
@@ -179,6 +179,9 @@ while running:
     # GRAVIDADE E VELOCIDADE DE QUEDA
     # ------------------------------
 
+    # Guardar a posição anterior para detectar pousos
+    mario_y_anterior = mario_y
+
     if mario_vel_y < 0:
         mario_vel_y += GRAVIDADE
     else:
@@ -189,6 +192,37 @@ while running:
 
     #Atualizar posição vertical
     mario_y += mario_vel_y
+
+    # ------------------------------
+    # COLISÃO COM AS PLATAFORMAS
+    # ------------------------------
+    
+    mario_no_chao = False
+
+    mario_rect = pygame.Rect(mario_x, mario_y, 30, 40)
+    mario_rect_anterior = pygame.Rect(
+        mario_x, mario_y_anterior, 30, 40
+    )
+
+    for plataforma in plataformas:
+
+        #Verificar se o Mario está caindo
+        if mario_vel_y >= 0:
+
+            # Verificar se os pés cruzaram o topo do bloco
+            if (
+                mario_rect_anterior.bottom <= plataforma.top
+                and mario_rect.bottom >= plataforma.top
+                and mario_rect.right > plataforma.left
+                and mario_rect.left < plataforma.right
+            ):
+                mario_y = plataforma.top - 40
+                mario_vel_y = 0
+                mario_no_chao = True
+
+                # Atualizar o retângulo após o pouso
+                mario_rect.y = mario_y
+
 
     # ------------------------------
     # COLISÃO COM O CHÃO

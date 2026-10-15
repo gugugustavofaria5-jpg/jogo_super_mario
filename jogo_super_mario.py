@@ -33,6 +33,8 @@ mario_vel_y = 0
 
 mario_no_chao = False
 mario_dir = 1
+pulo_pressionado = False
+
 
 # ==============================
 # CONFIGURAÇÕES DA MOVIMENTAÇÃO
@@ -83,6 +85,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+        if event.type == pygame.KEYUP:
+            if event.key in (pygame.K_UP, pygame.K_SPACE):
+                if mario_vel_y < 0:
+                    mario_vel_y *= CORTE_PULO
+                    
         # Detectar toques na tela
         if event.type == pygame.FINGERDOWN:
             x = int(event.x * 700)
@@ -121,7 +128,10 @@ while running:
 
     else:
         if mario_no_chao:
+            mario_vel_x *= FRICAO
+        else:
             mario_vel_x *= 0.98
+            
 
     # Limitar velocidade horizontal
     mario_vel_x = max(-VEL_MAX, min(VEL_MAX, mario_vel_x))
@@ -131,13 +141,13 @@ while running:
 
     # Atualizar posição horizontal
 
+    #Limitar velocidade horizotal
     mario_x += mario_vel_x
 
     mario_x = max(0, min(700 - 30, mario_x))
 
-
-    mario_vel_x = max(-VEL_MAX, min(VEL_MAX, mario_vel_x))
-    mario_x += mario_vel_x
+    #Atualizar posição horizontal
+    mario_x = max(0, min(700 - 30, mario_x))
     
     # ------------------------------
     # PULO DO MARIO
@@ -155,6 +165,11 @@ while running:
         mario_vel_y += GRAVIDADE
     else:
         mario_vel_y += GRAVIDADE_QUEDA
+
+    #Limitar a velocidade máxima da queda
+    mario_vel_y = min(mario_vel_y, VEL_QUEDA_MAX)
+
+    #Atualizar posição vertical
     mario_y += mario_vel_y
 
     # ------------------------------

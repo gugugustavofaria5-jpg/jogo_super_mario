@@ -16,7 +16,8 @@ pygame.display.set_caption("MARIO_O_JOGO")
 # ==============================
 # CÂMERA DO JOGO
 # ==============================
-carara = Camera(700)
+
+camera = Camera(700)
 
 # ==============================
 # CARREGAMENTO DAS IMAGENS
@@ -165,10 +166,8 @@ while running:
     #Limitar velocidade horizotal
     mario_x += mario_vel_x
 
-    mario_x = max(0, min(700 - 30, mario_x))
-
-    #Atualizar posição horizontal
-    mario_x = max(0, min(700 - 30, mario_x))
+    if mario_x < 0:
+        mario_x = 0
 
     # ------------------------------
     # PULO DO MARIO
@@ -237,6 +236,12 @@ while running:
         mario_no_chao = True
 
     # ------------------------------
+    # ATUALIZAR A CÂMERA
+    # ------------------------------
+
+    camera.atualizar(mario_x)
+
+    # ------------------------------
     # DESENHAR O CENÁRIO
     # ------------------------------
 
@@ -248,18 +253,25 @@ while running:
     # DESENAHR BLOCOS
     # ------------------------------
     for plataforma in plataformas:
-        for x in range(plataforma.left, plataforma.right, 40):
-            tamanho_tela.blit(bloco_img, (x, plataforma.y))
+        plataforma_tela = camera.aplicar(plataforma)
+
+        for x in range(plataforma_tela.left, plataforma_tela.right, 40):
+            tamanho_tela.blit(bloco_img, (x, plataforma_tela.y))
 
     # ------------------------------
     # DESENHAR O MARIO
     # ------------------------------
 
     if mario_dir == -1:
+        mario_tela_x = mario_x - camera.x
+
+    mario_tela_x = mario_x - camera.x
+
+    if mario_dir == -1:
         mario_flip = pygame.transform.flip(mario_img, True, False)
-        tamanho_tela.blit(mario_flip, (mario_x, mario_y))
+        tamanho_tela.blit(mario_flip, (mario_tela_x, mario_y))
     else:
-        tamanho_tela.blit(mario_img, (mario_x, mario_y))
+        tamanho_tela.blit(mario_img, (mario_tela_x, mario_y))
 
     # ------------------------------
     # DESENHAR OS BOTÕES

@@ -26,7 +26,8 @@ camera = Camera(700)
 
 chao_img = pygame.image.load("/home/gustavo/Imagens/Captura de tela de 2026-10-06 01-54-33.png")
 chao_img = pygame.transform.scale(chao_img, (700, 50))
-
+# Criar uma cópia espelhada do chão para encaixar as bordas
+chao_img_espelhado = pygame.transform.flip(chao_img, True, False)
 mario_img = pygame.image.load("/home/gustavo/Imagens/imagem de mario 2.0.webp")
 mario_img = pygame.transform.scale(mario_img, (30, 40))
 
@@ -38,6 +39,30 @@ bloco_img = pygame.image.load(
 ).convert_alpha()
 
 bloco_img = pygame.transform.scale(bloco_img, (40, 30))
+
+# ==============================
+# IMAGEM DE FUNDO
+# ==============================
+
+fundo_img = pygame.image.load(
+    "/home/gustavo/Imagens/fundo2.0.png"
+).convert()
+
+# Manter a proporção original da imagem
+# e ajustar a altura para a tela do jogo.
+altura_fundo = 400
+largura_original = fundo_img.get_width()
+altura_original = fundo_img.get_height()
+
+largura_fundo = int(
+    largura_original * altura_fundo / altura_original
+)
+
+fundo_img = pygame.transform.scale(
+    fundo_img,
+    (largura_fundo, altura_fundo)
+)
+
 
 # ==============================
 # VARIÁVEIS DO MARIO
@@ -242,16 +267,49 @@ while running:
     camera.atualizar(mario_x)
 
     # ------------------------------
-    # DESENHAR O CENÁRIO
+    # DESENAHR O FUNDO
     # ------------------------------
 
-    tamanho_tela.fill((135, 206, 235))
-    pygame.draw.rect(tamanho_tela, (139, 69, 19), (0, 350, 700, 50))
-    tamanho_tela.blit(chao_img, (0, 350))
+    
+# ==============================
+# DESENHAR O FUNDO PANORÂMICO
+# ==============================
+
+    fundo_x = -int(camera.x * 0.25)
+
+    tamanho_tela.blit(fundo_img, (fundo_x, 0))
+    
+    # ==============================
+    # DESENHAR CHÃO CONTÍNUO
+    # ==============================
+
+    # O fundo se movimenta mais devagar que a câmera.
+    velocidade_parallax = 0.25
+
+    fundo_largura = fundo_img.get_width()
+
+    if fundo_largura > 0:
+
+        # Deslocamento horizontal do fundo
+        deslocamento_fundo = int(
+            camera.x * velocidade_parallax
+        ) % fundo_largura
+
+        # Desenhar imagens suficientes para cobrir a tela
+        fundo_x = -deslocamento_fundo
+
+        for x in range(
+            fundo_x - fundo_largura,
+            tamanho_tela.get_width() + fundo_largura,
+            fundo_largura
+        ):
+            tamanho_tela.blit(fundo_img, (x, 0))
+
 
     # ------------------------------
     # DESENAHR BLOCOS
     # ------------------------------
+    
     for plataforma in plataformas:
         plataforma_tela = camera.aplicar(plataforma)
 
@@ -261,12 +319,7 @@ while running:
     # ------------------------------
     # DESENHAR O MARIO
     # ------------------------------
-
-    if mario_dir == -1:
-        mario_tela_x = mario_x - camera.x
-
-    mario_tela_x = mario_x - camera.x
-
+    mario_tela_x = int(mario_x - camera.x)
     if mario_dir == -1:
         mario_flip = pygame.transform.flip(mario_img, True, False)
         tamanho_tela.blit(mario_flip, (mario_tela_x, mario_y))

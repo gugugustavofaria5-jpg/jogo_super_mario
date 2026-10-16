@@ -3,6 +3,7 @@
 # ==============================
 import pygame
 from mapa import criar_plataformas
+from camera import Camera
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -11,6 +12,11 @@ clock = pygame.time.Clock()
 # ==============================
 tamanho_tela = pygame.display.set_mode((700, 400))
 pygame.display.set_caption("MARIO_O_JOGO")
+
+# ==============================
+# CÂMERA DO JOGO
+# ==============================
+carara = Camera(700)
 
 # ==============================
 # CARREGAMENTO DAS IMAGENS

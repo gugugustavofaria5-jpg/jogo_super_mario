@@ -2,6 +2,7 @@
 # IMPORTAÇÃO E INICIALIZAÇÃO
 # ==============================
 import pygame
+from mapa import criar_plataformas
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -75,14 +76,10 @@ botao_pulo = pygame.Rect(580, 300, 60, 60)
 running = True
 
 # ------------------------------
-# PLATAFORMAS DE TIJOLOS
+# PLATAFORMAS Do MAPA
 # ------------------------------
+plataformas = criar_plataformas()
 
-plataformas = [
-    pygame.Rect(150, 270, 120, 30),
-    pygame.Rect(330, 220, 120, 30),
-    pygame.Rect(500, 170, 120, 30),
-    ]
 while running:
 
     # ------------------------------

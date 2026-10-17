@@ -264,7 +264,7 @@ while running:
     # ------------------------------
 
     if mario_y + 40 >= 350:
-        mario_y = 310
+        mario_y = 310 
         mario_vel_y = 0
         mario_no_chao = True
 
@@ -275,72 +275,72 @@ while running:
     camera.atualizar(mario_x)
 
 
-# ==============================
-# DESENHAR O FUNDO PANORÂMICO
-# ==============================
-velocidade_parallax = 0.25
-fundo_largura = fundo_img.get_width()
-
-if fundo_largura > 0:
-    deslocamento_fundo = int(camera.x * velocidade_parallax) % fundo_largura
-    fundo_x = -deslocamento_fundo
-
-    for x in range(
-        fundo_x - fundo_largura,
-        tamanho_tela.get_width() + fundo_largura,
-        fundo_largura
-    ):
-        tamanho_tela.blit(fundo_img, (x, 0))
-    
     # ==============================
-    # DESENHAR CHÃO CONTÍNUO
+    # DESENHAR O FUNDO PANORÂMICO
     # ==============================
-    chao_largura = chao_img.get_width()
-    if chao_largura > 0:
-        deslocamento_chao = int(camera.x) % chao_largura
-        chao_x = -deslocamento_fundo
+    velocidade_parallax = 0.25
+    fundo_largura = fundo_img.get_width()
+
+    if fundo_largura > 0:
+        deslocamento_fundo = int(camera.x * velocidade_parallax) % fundo_largura
+        fundo_x = -deslocamento_fundo
 
         for x in range(
-            chao_x - chao_largura,
-            tamanho_tela.get_width() + chao_largura,
-            chao_largura
+            fundo_x - fundo_largura,
+            tamanho_tela.get_width() + fundo_largura,
+            fundo_largura
         ):
-            tamanho_tela.blit(chao_img, (x, 350))
+            tamanho_tela.blit(fundo_img, (x, 0))
+        
+        # ==============================
+        # DESENHAR CHÃO CONTÍNUO
+        # ==============================
+        chao_largura = chao_img.get_width()
+        if chao_largura > 0:
+            deslocamento_chao = int(camera.x) % chao_largura
+            chao_x = -deslocamento_chao
 
-    # ------------------------------
-    # DESENAHR BLOCOS
-    # ------------------------------
-    
-    for plataforma in plataformas:
-        plataforma_tela = camera.aplicar(plataforma)
+            for x in range(
+                chao_x - chao_largura,
+                tamanho_tela.get_width() + chao_largura,
+                chao_largura
+            ):
+                tamanho_tela.blit(chao_img, (x, 350))
 
-        for x in range(plataforma_tela.left, plataforma_tela.right, 40):
-            tamanho_tela.blit(bloco_img, (x, plataforma_tela.y))
+        # ------------------------------
+        # DESENAHR BLOCOS
+        # ------------------------------
+        
+        for plataforma in plataformas:
+            plataforma_tela = camera.aplicar(plataforma)
 
-    # ------------------------------
-    # DESENHAR O MARIO
-    # ------------------------------
-    mario_tela_x = int(mario_x - camera.x)
-    if mario_dir == -1:
-        mario_flip = pygame.transform.flip(mario_img, True, False)
-        tamanho_tela.blit(mario_flip, (mario_tela_x, mario_y))
-    else:
-        tamanho_tela.blit(mario_img, (mario_tela_x, mario_y))
+            for x in range(plataforma_tela.left, plataforma_tela.right, 40):
+                tamanho_tela.blit(bloco_img, (x, plataforma_tela.y))
 
-    # ------------------------------
-    # DESENHAR OS BOTÕES
-    # ------------------------------
+        # ------------------------------
+        # DESENHAR O MARIO
+        # ------------------------------
+        mario_tela_x = int(mario_x - camera.x)
+        if mario_dir == -1:
+            mario_flip = pygame.transform.flip(mario_img, True, False)
+            tamanho_tela.blit(mario_flip, (mario_tela_x, mario_y))
+        else:
+            tamanho_tela.blit(mario_img, (mario_tela_x, mario_y))
 
-    pygame.draw.rect(tamanho_tela, (200, 200, 200), botao_esq)
-    pygame.draw.rect(tamanho_tela, (200, 200, 200), botao_dir)
-    pygame.draw.rect(tamanho_tela, (200, 200, 200), botao_pulo)
+        # ------------------------------
+        # DESENHAR OS BOTÕES
+        # ------------------------------
 
-    # ------------------------------
-    # ATUALIZAR O JOGO
-    # ------------------------------
+        pygame.draw.rect(tamanho_tela, (200, 200, 200), botao_esq)
+        pygame.draw.rect(tamanho_tela, (200, 200, 200), botao_dir)
+        pygame.draw.rect(tamanho_tela, (200, 200, 200), botao_pulo)
 
-    clock.tick(60)
-    pygame.display.flip()
+        # ------------------------------
+        # ATUALIZAR O JOGO
+        # ------------------------------
+
+        clock.tick(60)
+        pygame.display.flip()
 
 # ==============================
 # ENCERRAR O PYGAME

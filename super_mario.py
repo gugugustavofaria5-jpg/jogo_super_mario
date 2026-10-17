@@ -2,6 +2,7 @@
 # IMPORTAÇÃO E INICIALIZAÇÃO
 # ==============================
 import pygame
+import random
 from mapa import criar_plataformas, criar_canos
 from camera import Camera
 
@@ -53,6 +54,13 @@ except Exception as e:
     bloco_img.fill((200, 100, 0))
 
 # ==============================
+# IMAGEM DOS CANOS
+# ==============================
+
+cano_img = pygame.image.load(
+    "/home/gustavo/Imagens/tobo_mario.png"
+)
+# ==============================
 # IMAGEM DE FUNDO
 # ==============================
 try:
@@ -66,6 +74,26 @@ except Exception as e:
     print(f"FALHA FUNDO file.enc: {e} - usando fundo azul temporário")
     fundo_img = pygame.Surface((700, 400))
     fundo_img.fill((92, 148, 252))
+
+# ==============================
+# IMAGENS DAS ÁRVORES
+# ==============================
+arvore1_img = pygame.image.load(
+    "/home/gustavo/Imagens/arvore2.0.png"
+).convert_alpha()
+
+arvore2_img = pygame.image.load(
+    "/home/gustavo/Imagens/arvore2.jpeg"
+).convert_alpha()
+
+# Ajustar o tamanho das árvores
+arvore1_img = pygame.transform.scale(
+    arvore1_img, (110, 135)
+)
+
+arvore2_img = pygame.transform.scale(
+    arvore2_img, (125, 135)
+)
 
 # ==============================
 # VARIÁVEIS DO MARIO
@@ -114,58 +142,31 @@ running = True
 # PLATAFORMAS DO MAPA
 # ------------------------------
 plataformas = criar_plataformas()
-canos = criar_canos
+canos = criar_canos()
 
-# ------------------------------
-# DESENHAR CANOS VERDES
-# ------------------------------
+# ==============================
+# ÁRVORES DECORATIVAS DO MAPA
+# ==============================
 
-for cano in canos:
-    cano_tela = camera.aplicar(cano)
+arvores_cenario = []
 
-    # Corpo do cano
-    pygame.draw.rect(
-        tamanho_tela,
-        (0, 150, 30),
-        cano_tela
+for x in range(200, 10100, 300):
+    # Variar a distância entre as árvores
+    pos_x = x + random.randint(-80, 80)
+
+    # Escolher aleatoriamente uma das duas imagens
+    imagem = random.choice([
+        arvore1_img,
+        arvore2_img
+    ])
+
+    # Posicionar a base no nível do chão
+    pos_y = 350 - imagem.get_height()
+
+    arvores_cenario.append(
+        (imagem, pos_x, pos_y)
     )
 
-    # Borda externa 
-    pygame.draw.rect(
-        tamanho_tela,
-        (0, 90, 20),
-        cano_tela,
-        3
-    )
-
-    # Parte superior do cano
-    topo_cano = pygame.Rect(
-        cano_tela.x - 5,
-        cano_tela.y,
-        cano_tela.width + 10,
-        15
-    )
-
-    pygame.draw.rect(
-        tamanho_tela,
-        (0, 200, 40),
-        topo_cano
-    )
-
-    pygame.draw.rect(
-        tamanho_tela,
-        (0, 100, 20),
-        topo_cano,
-        3
-    )
-
-    #Reflexo luz no lado esquerdo 
-    pygame.draw.line(
-        (100, 255, 100),
-        (cano_tela.x + 8, cano_tela.y + 18),
-        (cano_tela.x + 8, cano_tela.bottom - 5),
-        4
-    )
 
 while running:
 
@@ -241,13 +242,37 @@ while running:
     if abs(mario_vel_x) < 0.05 and not mover_esq and not mover_dir:
         mario_vel_x = 0
 
-    # Atualizar posição horizontal
+    
+    # ------------------------------
+    # MOVIMENTAÇÃO E COLISÃO LATERAL COM OS CANOS
+    # ------------------------------
 
-    #Limitar velocidade horizotal
     mario_x += mario_vel_x
 
     if mario_x < 0:
         mario_x = 0
+
+    # Verificar se o Mario bateu na lateral de um cano
+    mario_rect_horizontal = pygame.Rect(
+        mario_x, mario_y, 30, 40
+    )
+
+    for cano in canos:
+        if mario_rect_horizontal.colliderect(cano):
+
+            # Mario andando para a direita
+            if mario_vel_x > 0:
+                mario_x = cano.left - 30
+
+            # Mario andando para a esquerda
+            elif mario_vel_x < 0:
+                mario_x = cano.right
+
+            # Impedir que continue atravessando o cano
+            mario_vel_x = 0
+
+            # Atualizar a colisão horizontal
+            mario_rect_horizontal.x = mario_x
 
     # ------------------------------
     # PULO DO MARIO
@@ -354,6 +379,20 @@ while running:
             ):
                 tamanho_tela.blit(chao_img, (x, 350))
 
+        # ==============================
+        # DESENHAR ÁRVORES DECORATIVAS
+        # ==============================
+
+        for imagem, arvore_x, arvore_y in arvores_cenario:
+            arvore_tela_x = arvore_x - camera.x
+
+            # Desenhar apenas árvores próximas da tela
+            if -imagem.get_width() < arvore_tela_x < 700:
+                tamanho_tela.blit(
+                    imagem,
+                    (arvore_tela_x, arvore_y)
+                )
+
         # ------------------------------
         # DESENAHR BLOCOS
         # ------------------------------
@@ -363,6 +402,23 @@ while running:
 
             for x in range(plataforma_tela.left, plataforma_tela.right, 40):
                 tamanho_tela.blit(bloco_img, (x, plataforma_tela.y))
+
+        # ------------------------------
+        # DESENHAR CANOS VERDES
+        # ------------------------------
+
+        for cano in canos:
+            cano_tela = camera.aplicar(cano)
+
+            imagem_cano = pygame.transform.scale(
+                cano_img,
+                (cano.width + 10, cano.height)
+            )
+
+            tamanho_tela.blit(
+                imagem_cano,
+                (cano_tela.x - 5, cano_tela.y)
+            )
 
         # ------------------------------
         # DESENHAR O MARIO

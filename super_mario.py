@@ -45,7 +45,7 @@ bloco_img = pygame.transform.scale(bloco_img, (40, 30))
 # ==============================
 
 fundo_img = pygame.image.load(
-    "/home/gustavo/Imagens/fundo2.0.png"
+    "/home/gustavo/Imagens/file.enc"
 ).convert()
 
 # Manter a proporção original da imagem

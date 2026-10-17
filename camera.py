@@ -9,6 +9,7 @@ import pygame
 # --------------------
 
 class Camera:
+    
     def __init__(self, largura_tela):
         self.x = 0
         self.largura_tela = largura_tela

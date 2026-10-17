@@ -24,45 +24,53 @@ camera = Camera(700)
 # ==============================
 
 
-chao_img = pygame.image.load("/home/gustavo/Imagens/Captura de tela de 2026-10-06 01-54-33.png")
-chao_img = pygame.transform.scale(chao_img, (700, 50))
-# Criar uma cópia espelhada do chão para encaixar as bordas
+# ==============================
+# CARREGAMENTO DAS IMAGENS
+# ==============================
+try:
+    chao_img = pygame.image.load("/home/gustavo/Imagens/Captura de tela de 2026-10-06 01-54-33.png").convert_alpha()
+    chao_img = pygame.transform.scale(chao_img, (700, 50))
+except Exception as e:
+    print(f"FALHA CHÃO: {e}")
+    chao_img = pygame.Surface((700, 50))
+    chao_img.fill((0, 200, 0))
+
+# Cópia espelhada (seu código original preservado)
 chao_img_espelhado = pygame.transform.flip(chao_img, True, False)
-mario_img = pygame.image.load("/home/gustavo/Imagens/imagem de mario 2.0.webp")
-mario_img = pygame.transform.scale(mario_img, (30, 40))
+
+try:
+    mario_img = pygame.image.load("/home/gustavo/Imagens/imagem de mario 2.0.webp").convert_alpha()
+    mario_img = pygame.transform.scale(mario_img, (30, 40))
+except Exception as e:
+    print(f"FALHA MARIO: {e}")
+    mario_img = pygame.Surface((30, 40))
+    mario_img.fill((255, 0, 0))
 
 # ==============================
 # IMAGEM DOS BLOCOS
 # ==============================
-bloco_img = pygame.image.load(
-    "/home/gustavo/Imagens/bloco.png"
-).convert_alpha()
-
-bloco_img = pygame.transform.scale(bloco_img, (40, 30))
+try:
+    bloco_img = pygame.image.load("/home/gustavo/Imagens/bloco.png").convert_alpha()
+    bloco_img = pygame.transform.scale(bloco_img, (40, 30))
+except Exception as e:
+    print(f"FALHA BLOCO: {e}")
+    bloco_img = pygame.Surface((40, 30))
+    bloco_img.fill((200, 100, 0))
 
 # ==============================
 # IMAGEM DE FUNDO
 # ==============================
-
-fundo_img = pygame.image.load(
-    "/home/gustavo/Imagens/file.enc"
-).convert()
-
-# Manter a proporção original da imagem
-# e ajustar a altura para a tela do jogo.
-altura_fundo = 400
-largura_original = fundo_img.get_width()
-altura_original = fundo_img.get_height()
-
-largura_fundo = int(
-    largura_original * altura_fundo / altura_original
-)
-
-fundo_img = pygame.transform.scale(
-    fundo_img,
-    (largura_fundo, altura_fundo)
-)
-
+try:
+    fundo_original = pygame.image.load("/home/gustavo/Imagens/file.enc").convert()
+    altura_fundo = 400
+    largura_original = fundo_original.get_width()
+    altura_original = fundo_original.get_height()
+    largura_fundo = int(largura_original * altura_fundo / altura_original)
+    fundo_img = pygame.transform.scale(fundo_original, (largura_fundo, altura_fundo))
+except Exception as e:
+    print(f"FALHA FUNDO file.enc: {e} - usando fundo azul temporário")
+    fundo_img = pygame.Surface((700, 400))
+    fundo_img.fill((92, 148, 252))
 
 # ==============================
 # VARIÁVEIS DO MARIO
@@ -266,45 +274,38 @@ while running:
 
     camera.atualizar(mario_x)
 
-    # ------------------------------
-    # DESENAHR O FUNDO
-    # ------------------------------
 
-    
 # ==============================
 # DESENHAR O FUNDO PANORÂMICO
 # ==============================
+velocidade_parallax = 0.25
+fundo_largura = fundo_img.get_width()
 
-    fundo_x = -int(camera.x * 0.25)
+if fundo_largura > 0:
+    deslocamento_fundo = int(camera.x * velocidade_parallax) % fundo_largura
+    fundo_x = -deslocamento_fundo
 
-    tamanho_tela.blit(fundo_img, (fundo_x, 0))
+    for x in range(
+        fundo_x - fundo_largura,
+        tamanho_tela.get_width() + fundo_largura,
+        fundo_largura
+    ):
+        tamanho_tela.blit(fundo_img, (x, 0))
     
     # ==============================
     # DESENHAR CHÃO CONTÍNUO
     # ==============================
-
-    # O fundo se movimenta mais devagar que a câmera.
-    velocidade_parallax = 0.25
-
-    fundo_largura = fundo_img.get_width()
-
-    if fundo_largura > 0:
-
-        # Deslocamento horizontal do fundo
-        deslocamento_fundo = int(
-            camera.x * velocidade_parallax
-        ) % fundo_largura
-
-        # Desenhar imagens suficientes para cobrir a tela
-        fundo_x = -deslocamento_fundo
+    chao_largura = chao_img.get_width()
+    if chao_largura > 0:
+        deslocamento_chao = int(camera.x) % chao_largura
+        chao_x = -deslocamento_fundo
 
         for x in range(
-            fundo_x - fundo_largura,
-            tamanho_tela.get_width() + fundo_largura,
-            fundo_largura
+            chao_x - chao_largura,
+            tamanho_tela.get_width() + chao_largura,
+            chao_largura
         ):
-            tamanho_tela.blit(fundo_img, (x, 0))
-
+            tamanho_tela.blit(chao_img, (x, 350))
 
     # ------------------------------
     # DESENAHR BLOCOS

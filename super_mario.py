@@ -2,7 +2,7 @@
 # IMPORTAÇÃO E INICIALIZAÇÃO
 # ==============================
 import pygame
-from mapa import criar_plataformas
+from mapa import criar_plataformas, criar_canos
 from camera import Camera
 
 pygame.init()
@@ -18,11 +18,6 @@ pygame.display.set_caption("MARIO_O_JOGO")
 # ==============================
 
 camera = Camera(700)
-
-# ==============================
-# CARREGAMENTO DAS IMAGENS
-# ==============================
-
 
 # ==============================
 # CARREGAMENTO DAS IMAGENS
@@ -116,9 +111,61 @@ botao_pulo = pygame.Rect(580, 300, 60, 60)
 running = True
 
 # ------------------------------
-# PLATAFORMAS Do MAPA
+# PLATAFORMAS DO MAPA
 # ------------------------------
 plataformas = criar_plataformas()
+canos = criar_canos
+
+# ------------------------------
+# DESENHAR CANOS VERDES
+# ------------------------------
+
+for cano in canos:
+    cano_tela = camera.aplicar(cano)
+
+    # Corpo do cano
+    pygame.draw.rect(
+        tamanho_tela,
+        (0, 150, 30),
+        cano_tela
+    )
+
+    # Borda externa 
+    pygame.draw.rect(
+        tamanho_tela,
+        (0, 90, 20),
+        cano_tela,
+        3
+    )
+
+    # Parte superior do cano
+    topo_cano = pygame.Rect(
+        cano_tela.x - 5,
+        cano_tela.y,
+        cano_tela.width + 10,
+        15
+    )
+
+    pygame.draw.rect(
+        tamanho_tela,
+        (0, 200, 40),
+        topo_cano
+    )
+
+    pygame.draw.rect(
+        tamanho_tela,
+        (0, 100, 20),
+        topo_cano,
+        3
+    )
+
+    #Reflexo luz no lado esquerdo 
+    pygame.draw.line(
+        (100, 255, 100),
+        (cano_tela.x + 8, cano_tela.y + 18),
+        (cano_tela.x + 8, cano_tela.bottom - 5),
+        4
+    )
 
 while running:
 
@@ -239,7 +286,7 @@ while running:
         mario_x, mario_y_anterior, 30, 40
     )
 
-    for plataforma in plataformas:
+    for plataforma in plataformas + canos:
 
         #Verificar se o Mario está caindo
         if mario_vel_y >= 0:

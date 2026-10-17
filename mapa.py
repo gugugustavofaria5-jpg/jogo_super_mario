@@ -9,7 +9,7 @@ import pygame
 # COMFIGURAÇÃO DA FASE
 # =========================
 
-LARGURA_MAPA = 7000
+LARGURA_MAPA = 10100
 ALTURA_CHAO = 350
 
 
@@ -17,9 +17,9 @@ ALTURA_CHAO = 350
 # PLATAFORMAS DA PRIMEIRA REGIÃO
 # =================================
 
-def criar_paltaformas():
+def criar_plataformas():
 
-    paltaformas = [
+    plataformas = [
 
         # ----------------------------
         # AREA 1 - INICIO DA AVENTURA
@@ -96,5 +96,72 @@ def criar_paltaformas():
         pygame.Rect(6700, 220, 120, 30),
         pygame.Rect(6880, 180, 120, 30),
 
+        # Região 9
+        pygame.Rect(7000, 270, 120, 30),
+        pygame.Rect(7180, 230, 120, 30),
+        pygame.Rect(7360, 190, 120, 30),
+        pygame.Rect(7540, 240, 160, 30),
+
+        # Região 10
+        pygame.Rect(7800, 270, 120, 30),
+        pygame.Rect(7980, 220, 120, 30),
+        pygame.Rect(8160, 170, 120, 30),
+        pygame.Rect(8340, 210, 160, 30),
+
+        # Região 11
+        pygame.Rect(8600, 260, 120, 30),
+        pygame.Rect(8780, 220, 120, 30),
+        pygame.Rect(8960, 180, 120, 30),
+        pygame.Rect(9140, 230, 160, 30),
+
+        # Região 12
+        pygame.Rect(9400, 270, 120, 30),
+        pygame.Rect(9580, 220, 120, 30),
+        pygame.Rect(9760, 170, 120, 30),
+        pygame.Rect(9940, 210, 160, 30),
+
     ]
-    return paltaformas
+    return plataformas
+
+# ========================
+# CANOS NO MAPA
+# ========================
+
+def criar_canos():
+
+    canos = [
+        # Primeiro cano
+        pygame.Rect(600, 290, 60, 60),
+
+        # Segundo cano
+        pygame.Rect(1050, 270, 60, 80),
+
+        # Terceiro cano
+        pygame.Rect(1700, 280, 60, 70),
+
+        # Quarto cano
+        pygame.Rect(2650, 260, 60, 90),
+
+        # Quinto cano
+        pygame.Rect(3650, 280, 60, 70),
+
+        # Sexto cano
+        pygame.Rect(4650, 260, 60, 90),
+
+        # Sétimo cano
+        pygame.Rect(5600, 280, 60, 70),
+
+        # Último cano
+        pygame.Rect(6600, 270, 60, 80),
+
+        # =======================
+        # NOVOS CANOS
+        # =======================
+
+        pygame.Rect(7200, 270, 60, 80),
+        pygame.Rect(7900, 250, 60, 100),
+        pygame.Rect(8500, 280, 60, 70),
+        pygame.Rect(9250, 260, 60, 90),
+        pygame.Rect(9850, 270, 60, 80),
+    ]
+    return canos

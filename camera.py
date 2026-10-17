@@ -24,6 +24,11 @@ class Camera:
         if self.x < 0:
             self.x = 0
 
+        limite_final = 10100 - self.largura_tela
+
+        if self.x > limite_final:
+            self.x = limite_final
+
     # ------------------------------
     # APLICAR DESLOCAMENTO
     # ------------------------------

@@ -6,6 +6,7 @@ import random
 from mapa import criar_plataformas, criar_canos
 from cenario import Cenario
 from camera import Camera
+from moedas import Moedas
 
 pygame.init()
 clock = pygame.time.Clock()

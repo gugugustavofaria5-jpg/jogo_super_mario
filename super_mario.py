@@ -4,6 +4,7 @@
 import pygame
 import random
 from mapa import criar_plataformas, criar_canos
+from cenario import Cenario
 from camera import Camera
 
 pygame.init()
@@ -19,6 +20,7 @@ pygame.display.set_caption("MARIO_O_JOGO")
 # ==============================
 
 camera = Camera(700)
+
 
 # ==============================
 # CARREGAMENTO DAS IMAGENS
@@ -79,11 +81,11 @@ except Exception as e:
 # IMAGENS DAS ÁRVORES
 # ==============================
 arvore1_img = pygame.image.load(
-    "/home/gustavo/Imagens/arvore2.0.png"
+    "/home/gustavo/Imagens/ar1.png"
 ).convert_alpha()
 
 arvore2_img = pygame.image.load(
-    "/home/gustavo/Imagens/arvore2.jpeg"
+    "/home/gustavo/Imagens/ar2.png"
 ).convert_alpha()
 
 # Ajustar o tamanho das árvores
@@ -93,6 +95,26 @@ arvore1_img = pygame.transform.scale(
 
 arvore2_img = pygame.transform.scale(
     arvore2_img, (125, 135)
+)
+
+# ==============================
+# IMAGEM DA PEDRA
+# ==============================
+
+pedra_img = pygame.image.load(
+    "/home/gustavo/Imagens/imagem_pedra.png"
+).convert_alpha()
+
+pedra_pequena = pygame.transform.scale(
+    pedra_img, (30, 30)
+)
+
+pedra_media = pygame.transform.scale(
+    pedra_img, (45, 45)
+)
+
+pedra_grande = pygame.transform.scale(
+    pedra_img, (60, 60)
 )
 
 # ==============================
@@ -144,28 +166,81 @@ running = True
 plataformas = criar_plataformas()
 canos = criar_canos()
 
+
 # ==============================
 # ÁRVORES DECORATIVAS DO MAPA
 # ==============================
 
 arvores_cenario = []
 
-for x in range(200, 10100, 300):
-    # Variar a distância entre as árvores
-    pos_x = x + random.randint(-80, 80)
+# Posições distribuídas pelo mapa
+posicoes_arvores = []
+x = 120
 
-    # Escolher aleatoriamente uma das duas imagens
+while x < 10100:
+    x += random.randint(300, 480)
+    posicoes_arvores.append(x)
+
+for pos_x in posicoes_arvores:
+
+    # Evitar árvores muito próximas dos canos
+    perto_cano = any(
+        abs(pos_x - cano.centerx) < 125
+        for cano in canos
+    )
+
+    if perto_cano:
+        continue
+
     imagem = random.choice([
         arvore1_img,
         arvore2_img
     ])
 
-    # Posicionar a base no nível do chão
-    pos_y = 350 - imagem.get_height()
+    # A base da árvore fica ligeiramente atrás do chão
+    pos_y = 350 - imagem.get_height() + 4
 
     arvores_cenario.append(
         (imagem, pos_x, pos_y)
     )
+
+
+# ==============================
+# PEDRAS DO CENÁRIO
+# ==============================
+
+pedras_cenario = []
+
+x = 220
+
+while x < 10100:
+    x += random.randint(260, 420)
+
+    perto_cano = any(
+        abs(x - cano.centerx) < 95
+        for cano in canos
+    )
+
+    perto_arvore = any(
+        abs(x - arvore_x) < 85
+        for _, arvore_x, _ in arvores_cenario
+    )
+
+    if perto_cano or perto_arvore:
+        continue
+
+    imagem = random.choice([
+        pedra_pequena,
+        pedra_media,
+        pedra_grande
+    ])
+
+    pedra_y = 350 - imagem.get_height() + 13
+
+    pedras_cenario.append(
+        (imagem, x, pedra_y)
+    )
+
 
 
 while running:
@@ -379,6 +454,8 @@ while running:
             ):
                 tamanho_tela.blit(chao_img, (x, 350))
 
+
+
         # ==============================
         # DESENHAR ÁRVORES DECORATIVAS
         # ==============================
@@ -386,12 +463,27 @@ while running:
         for imagem, arvore_x, arvore_y in arvores_cenario:
             arvore_tela_x = arvore_x - camera.x
 
-            # Desenhar apenas árvores próximas da tela
             if -imagem.get_width() < arvore_tela_x < 700:
                 tamanho_tela.blit(
                     imagem,
                     (arvore_tela_x, arvore_y)
                 )
+
+
+        # ==============================
+        # DESENHAR PEDRAS
+        # ==============================
+
+        for imagem, pedra_x, pedra_y in pedras_cenario:
+            pedra_tela_x = pedra_x - camera.x
+
+            if -imagem.get_width() < pedra_tela_x < 700:
+                tamanho_tela.blit(
+                    imagem,
+                    (pedra_tela_x, pedra_y)
+                )
+
+
 
         # ------------------------------
         # DESENAHR BLOCOS

@@ -1,167 +1,129 @@
-# =========================
+
+# ==============================
 # MAPA DO JOGO
 # FASE 1 - PLANICIE VERDE
-# =========================
+# ==============================
 
 import pygame
 
-# =========================
-# COMFIGURAÇÃO DA FASE
-# =========================
+# ==============================
+# CONFIGURAÇÃO DA FASE
+# ==============================
 
 LARGURA_MAPA = 10100
 ALTURA_CHAO = 350
 
 
-# =================================
-# PLATAFORMAS DA PRIMEIRA REGIÃO
-# =================================
+# ==============================
+# CRIAR PLATAFORMAS
+# ==============================
 
 def criar_plataformas():
 
     plataformas = [
 
-        # ----------------------------
-        # AREA 1 - INICIO DA AVENTURA
-        # ----------------------------
+        # ÁREA 1 - INÍCIO
+        pygame.Rect(180, 275, 120, 30),
+        pygame.Rect(340, 225, 80, 30),
+        pygame.Rect(455, 185, 120, 30),
 
-        pygame.Rect(150, 270, 120, 30),
-        pygame.Rect(330, 220, 120, 30),
-        pygame.Rect(500, 170, 120, 30),
+        # ÁREA 2 - PRIMEIROS SALTOS
+        pygame.Rect(780, 270, 120, 30),
+        pygame.Rect(950, 230, 80, 30),
+        pygame.Rect(1060, 185, 120, 30),
+        pygame.Rect(1240, 225, 160, 30),
+        pygame.Rect(1450, 275, 120, 30),
 
-        # -------------------------------
-        # AREA 2 - PRIMEIRAS EXPLORAÇÕES
-        # -------------------------------
+        # ÁREA 3 - SUBIDA E DESCIDA
+        pygame.Rect(1780, 255, 120, 30),
+        pygame.Rect(1940, 215, 120, 30),
+        pygame.Rect(2100, 170, 80, 30),
+        pygame.Rect(2220, 135, 120, 30),
+        pygame.Rect(2400, 195, 160, 30),
+        pygame.Rect(2610, 265, 120, 30),
 
-        pygame.Rect(750, 270, 120, 30),
-        pygame.Rect(950, 220, 120, 30),
-        pygame.Rect(1150, 170, 120, 30),
-        pygame.Rect(1350, 230, 160, 30),
-        pygame.Rect(1550, 270, 120, 30),
+        # ÁREA 4 - CAMINHO ALTERNATIVO
+        pygame.Rect(2810, 285, 160, 30),
+        pygame.Rect(3000, 245, 120, 30),
+        pygame.Rect(3160, 200, 80, 30),
+        pygame.Rect(3280, 160, 120, 30),
+        pygame.Rect(3470, 205, 160, 30),
 
-        # ------------------------------
-        # AREA 3 - CAMINHO ELEVADO
-        # ------------------------------
+        # ÁREA 5 - PLATAFORMAS EM GRUPOS
+        pygame.Rect(3800, 270, 120, 30),
+        pygame.Rect(3970, 230, 120, 30),
+        pygame.Rect(4130, 185, 120, 30),
+        pygame.Rect(4320, 225, 160, 30),
+        pygame.Rect(4540, 275, 120, 30),
 
-        pygame.Rect(1800, 240, 120, 30),
-        pygame.Rect(1960, 200, 120, 30),
-        pygame.Rect(2120, 160, 120, 30),
-        pygame.Rect(2300, 200, 160, 30),
-        pygame.Rect(2500, 250, 120, 30),
+        # ÁREA 6 - COLINA
+        pygame.Rect(4800, 260, 120, 30),
+        pygame.Rect(4960, 220, 80, 30),
+        pygame.Rect(5080, 180, 120, 30),
+        pygame.Rect(5250, 140, 120, 30),
+        pygame.Rect(5450, 195, 160, 30),
 
-        # ------------------------------
-        # AREA 4 - CAMINHO ALTERNATIVO
-        # ------------------------------
+        # ÁREA 7 - CAMINHO IRREGULAR
+        pygame.Rect(5700, 240, 120, 30),
+        pygame.Rect(5880, 280, 160, 30),
+        pygame.Rect(6120, 245, 120, 30),
+        pygame.Rect(6290, 205, 80, 30),
+        pygame.Rect(6410, 165, 120, 30),
+        pygame.Rect(6600, 245, 160, 30),
 
-        pygame.Rect(2750, 280, 160, 30),
-        pygame.Rect(2950, 240, 120, 30),
-        pygame.Rect(3120, 200, 120, 30),
-        pygame.Rect(3300, 160, 120, 30),
-        pygame.Rect(3480, 210, 160, 30),
+        # ÁREA 8 - SEQUÊNCIA DE SALTOS
+        pygame.Rect(6870, 220, 120, 30),
+        pygame.Rect(7050, 175, 120, 30),
+        pygame.Rect(7230, 225, 160, 30),
 
-        # ------------------------------
-        # AREA 5 - PLATAFORMAS DISTANTES
-        # ------------------------------
+        # ÁREA 9
+        pygame.Rect(7500, 275, 120, 30),
+        pygame.Rect(7680, 235, 80, 30),
+        pygame.Rect(7800, 190, 120, 30),
+        pygame.Rect(7990, 230, 160, 30),
 
-        pygame.Rect(3750, 260, 120, 30),
-        pygame.Rect(3930, 220, 120, 30),
-        pygame.Rect(4110, 180, 120, 30),
-        pygame.Rect(4290, 220, 160, 30),
-        pygame.Rect(4500, 270, 120, 30),
+        # ÁREA 10
+        pygame.Rect(8270, 270, 120, 30),
+        pygame.Rect(8450, 225, 120, 30),
+        pygame.Rect(8620, 180, 80, 30),
+        pygame.Rect(8740, 145, 120, 30),
+        pygame.Rect(8930, 215, 160, 30),
 
-        # ------------------------------
-        # AREA 6 - CAMINHO DA COLINA
-        # ------------------------------
-
-        pygame.Rect(4750, 250, 120, 30),
-        pygame.Rect(4910, 210, 120, 30),
-        pygame.Rect(5070, 170, 120, 30),
-        pygame.Rect(5230, 130, 120, 30),
-        pygame.Rect(5420, 180, 160, 30),
-
-        # ------------------------------
-        # AREA 7 - APROXIMACAO DO FINAL
-        # ------------------------------
-
-        pygame.Rect(5650, 230, 120, 30),
-        pygame.Rect(5830, 270, 160, 30),
-        pygame.Rect(6080, 240, 120, 30),
-        pygame.Rect(6270, 200, 120, 30),
-        pygame.Rect(6460, 250, 160, 30),
-
-        # ------------------------------
-        # AREA 8 - ULTIMO TRECHO
-        # ------------------------------
-
-        pygame.Rect(6700, 220, 120, 30),
-        pygame.Rect(6880, 180, 120, 30),
-
-        # Região 9
-        pygame.Rect(7000, 270, 120, 30),
-        pygame.Rect(7180, 230, 120, 30),
-        pygame.Rect(7360, 190, 120, 30),
-        pygame.Rect(7540, 240, 160, 30),
-
-        # Região 10
-        pygame.Rect(7800, 270, 120, 30),
-        pygame.Rect(7980, 220, 120, 30),
-        pygame.Rect(8160, 170, 120, 30),
-        pygame.Rect(8340, 210, 160, 30),
-
-        # Região 11
-        pygame.Rect(8600, 260, 120, 30),
-        pygame.Rect(8780, 220, 120, 30),
-        pygame.Rect(8960, 180, 120, 30),
-        pygame.Rect(9140, 230, 160, 30),
-
-        # Região 12
-        pygame.Rect(9400, 270, 120, 30),
-        pygame.Rect(9580, 220, 120, 30),
-        pygame.Rect(9760, 170, 120, 30),
-        pygame.Rect(9940, 210, 160, 30),
+        # ÁREA 11
+        pygame.Rect(9200, 270, 120, 30),
+        pygame.Rect(9380, 230, 80, 30),
+        pygame.Rect(9500, 185, 120, 30),
+        pygame.Rect(9690, 225, 160, 30),
+        pygame.Rect(9900, 270, 120, 30),
 
     ]
+
     return plataformas
 
-# ========================
-# CANOS NO MAPA
-# ========================
+
+# ==============================
+# CRIAR CANOS
+# ==============================
 
 def criar_canos():
 
     canos = [
-        # Primeiro cano
-        pygame.Rect(600, 290, 60, 60),
 
-        # Segundo cano
-        pygame.Rect(1050, 270, 60, 80),
-
-        # Terceiro cano
-        pygame.Rect(1700, 280, 60, 70),
-
-        # Quarto cano
-        pygame.Rect(2650, 260, 60, 90),
-
-        # Quinto cano
-        pygame.Rect(3650, 280, 60, 70),
-
-        # Sexto cano
+        pygame.Rect(620, 290, 60, 60),
+        pygame.Rect(1080, 270, 60, 80),
+        pygame.Rect(1640, 280, 60, 70),
+        pygame.Rect(2330, 260, 60, 90),
+        pygame.Rect(2740, 290, 60, 60),
+        pygame.Rect(3610, 280, 60, 70),
         pygame.Rect(4650, 260, 60, 90),
+        pygame.Rect(5350, 280, 60, 70),
+        pygame.Rect(5620, 270, 60, 80),
+        pygame.Rect(6800, 260, 60, 90),
+        pygame.Rect(7440, 280, 60, 70),
+        pygame.Rect(8170, 250, 60, 100),
+        pygame.Rect(9070, 280, 60, 70),
+        pygame.Rect(9820, 270, 60, 80),
 
-        # Sétimo cano
-        pygame.Rect(5600, 280, 60, 70),
-
-        # Último cano
-        pygame.Rect(6600, 270, 60, 80),
-
-        # =======================
-        # NOVOS CANOS
-        # =======================
-
-        pygame.Rect(7200, 270, 60, 80),
-        pygame.Rect(7900, 250, 60, 100),
-        pygame.Rect(8500, 280, 60, 70),
-        pygame.Rect(9250, 260, 60, 90),
-        pygame.Rect(9850, 270, 60, 80),
     ]
+
     return canos

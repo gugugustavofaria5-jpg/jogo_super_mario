@@ -4,6 +4,8 @@
 import pygame
 import random
 from mapa import criar_plataformas, criar_canos
+from checkpoint import Checkpoint
+from menu_checkpoint import MenuCheckpoint
 from cenario import Cenario
 from camera import Camera
 from moedas import Moedas
@@ -121,6 +123,21 @@ pedra_media = pygame.transform.scale(
 pedra_grande = pygame.transform.scale(
     pedra_img, (60, 60)
 )
+# ==============================
+# IMAGEM DO CHECKPOINT
+# ==============================
+
+checkpoint = Checkpoint(
+    10030,
+    230,
+    "/home/gustavo/Imagens/imagem_check.png"
+)
+
+menu_checkpoint = MenuCheckpoint()
+
+# ======================
+# MOEDAS DO JOGO
+# ======================
 
 moedas = Moedas()
 # ==============================
@@ -166,12 +183,22 @@ botao_pulo = pygame.Rect(580, 300, 60, 60)
 
 running = True
 
+# =============================
+# MENU DO CHECKPOINT
+# =============================
+
+menu_checkpoint_ativo = False
+
 # ------------------------------
 # PLATAFORMAS DO MAPA
 # ------------------------------
 plataformas = criar_plataformas()
 canos = criar_canos()
 
+# ==============================
+# COMFIGURAR MOEDAS DO MAPA
+# ==============================
+moedas.configurar_plataformas(plataformas)
 
 # ==============================
 # ÁRVORES DECORATIVAS DO MAPA
@@ -247,7 +274,7 @@ while x < 10100:
         (imagem, x, pedra_y)
     )
 
-
+dedos_controles = {}
 
 while running:
 
@@ -265,25 +292,84 @@ while running:
 
     for event in pygame.event.get():
 
-        # Fechar o jogo
         if event.type == pygame.QUIT:
             running = False
 
+        # Teclado: cortar o pulo quando soltar a tecla
         if event.type == pygame.KEYUP:
             if event.key in (pygame.K_UP, pygame.K_SPACE):
                 if mario_vel_y < 0:
                     mario_vel_y *= CORTE_PULO
-                    
-        # Detectar toques na tela
-        if event.type == pygame.FINGERDOWN:
-            x = int(event.x * 700)
-            y = int(event.y * 400)
+
+        # Começou a tocar na tela
+        elif event.type == pygame.FINGERDOWN:
+            x = int(event.x * tamanho_tela.get_width())
+            y = int(event.y * tamanho_tela.get_height())
+
             if botao_esq.collidepoint(x, y):
-                mover_esq = True
-            if botao_dir.collidepoint(x, y):                  
-                mover_dir = True
-            if botao_pulo.collidepoint(x, y):
-                pular = True
+                dedos_controles[event.finger_id] = "esq"
+
+            elif botao_dir.collidepoint(x, y):
+                dedos_controles[event.finger_id] = "dir"
+
+            elif botao_pulo.collidepoint(x, y):
+                dedos_controles[event.finger_id] = "pulo"
+
+        # Moveu o dedo pela tela
+        elif event.type == pygame.FINGERMOTION:
+            x = int(event.x * tamanho_tela.get_width())
+            y = int(event.y * tamanho_tela.get_height())
+
+            if botao_esq.collidepoint(x, y):
+                dedos_controles[event.finger_id] = "esq"
+
+            elif botao_dir.collidepoint(x, y):
+                dedos_controles[event.finger_id] = "dir"
+
+            elif botao_pulo.collidepoint(x, y):
+                dedos_controles[event.finger_id] = "pulo"
+
+            else:
+                dedos_controles.pop(event.finger_id, None)
+
+        # Soltou o dedo
+        elif event.type == pygame.FINGERUP:
+            dedos_controles.pop(event.finger_id, None)
+
+            # Encurtar o pulo se o botão foi solto durante a subida
+            if (
+                mario_vel_y < 0
+                and "pulo" not in dedos_controles.values()
+            ):
+                mario_vel_y *= CORTE_PULO
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if menu_checkpoint_ativo:
+                if menu_checkpoint.verificar_clique(event.pos):
+                    menu_checkpoint_ativo = False
+
+    # ==============================
+    # PAUSA E MENU DO CHECKPOINT
+    # ==============================
+
+    if menu_checkpoint_ativo:
+        menu_checkpoint.desenhar(
+            tamanho_tela,
+            moedas.pontuacao
+        )
+
+        pygame.display.flip()
+        clock.tick(60)
+        continue
+    # ------------------------------
+    # APLICAR OS TOQUES ATIVOS
+    # ------------------------------
+
+    botoes_pressionados = set(dedos_controles.values())
+
+    mover_esq = "esq" in botoes_pressionados
+    mover_dir = "dir" in botoes_pressionados
+    pular = "pulo" in botoes_pressionados
 
     # ------------------------------
     # CONTROLES DO TECLADO
@@ -430,6 +516,12 @@ while running:
         40
     )
     moedas.verificar_coleta(mario_rect)
+    # ==============================
+    # VERIFICAR CHECKPOINT
+    # ==============================
+
+    if checkpoint.verificar_ativacao(mario_rect):
+        menu_checkpoint_ativo = True
 
     # ------------------------------
     # ATUALIZAR A CÂMERA
@@ -527,6 +619,12 @@ while running:
                 imagem_cano,
                 (cano_tela.x - 5, cano_tela.y)
             )
+        # ------------------------------
+        # DESENHAR CHECKPOINT
+        # ------------------------------
+
+        checkpoint.desenhar(tamanho_tela, camera) 
+
         # ------------------------------
         # DESENHAR MOEDAS
         # ------------------------------

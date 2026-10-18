@@ -1,11 +1,14 @@
+
 import pygame
 
 
 class Moedas:
-    """Gerancia as moedas, a coleta e a pontuação do jogo."""
+    """Gerencia as moedas, a coleta e a pontuação do jogo."""
 
     def __init__(self):
-        # Posições no mapa: (x, y). Ajuste ou acrecente moedas aqui.
+        # ==============================
+        # POSIÇÕES DAS MOEDAS NO MAPA
+        # ==============================
         self.posicoes = [
             (520, 275),
             (570, 345),
@@ -25,23 +28,37 @@ class Moedas:
             (2250, 285),
         ]
 
-        self. tamanho = 20
-        self. moedas = [
+        # ==============================
+        # CONFIGURAÇÃO DAS MOEDAS
+        # ==============================
+        self.tamanho = 20
+        self.pontuacao = 0
+
+        self.moedas = [
             pygame.Rect(x, y, self.tamanho, self.tamanho)
             for x, y in self.posicoes
         ]
-        self.posicoes = 0
 
+    # ==============================
+    # DESENHAR AS MOEDAS
+    # ==============================
     def desenhar(self, tela, camera):
-        """Desenha as moedas usando a câmera do jogo."""
         for moeda in self.moedas:
             moeda_tela = camera.aplicar(moeda)
             centro = moeda_tela.center
 
-            # Borda e brilho para dar aparência de moeda pixel-art simples.
-            pygame.draw.ellipse(tela, (150, 95, 0), moeda_tela)
+            # Borda externa
+            pygame.draw.ellipse(
+                tela, (150, 95, 0), moeda_tela
+            )
+
+            # Interior dourado
             parte_interna = moeda_tela.inflate(-4, -2)
-            pygame.draw.ellipse(tela, (255, 205, 35), parte_interna)
+            pygame.draw.ellipse(
+                tela, (255, 205, 35), parte_interna
+            )
+
+            # Brilho central
             pygame.draw.line(
                 tela,
                 (255, 245, 150),
@@ -49,24 +66,28 @@ class Moedas:
                 (centro[0], moeda_tela.bottom - 4),
                 2,
             )
+
+    # ==============================
+    # VERIFICAR COLETA
+    # ==============================
     def verificar_coleta(self, retangulo_mario):
-        """Remove moedas tocadas pelo Mario e retorna quantas foram coletadas."""
         coletadas = 0
 
         for moeda in self.moedas[:]:
             if retangulo_mario.colliderect(moeda):
-                self.moedas.remov(moeda)
+                self.moedas.remove(moeda)
                 self.pontuacao += 1
                 coletadas += 1
 
-
         return coletadas
 
+    # ==============================
+    # REINICIAR AS MOEDAS
+    # ==============================
     def reiniciar(self):
-        """Restaura todas as moedas e zera a pontuação."""
         self.moedas = [
             pygame.Rect(x, y, self.tamanho, self.tamanho)
             for x, y in self.posicoes
-
         ]
-        self.posicoes = 0
+
+        self.pontuacao = 0

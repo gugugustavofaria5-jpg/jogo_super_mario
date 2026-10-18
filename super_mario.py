@@ -22,6 +22,10 @@ pygame.display.set_caption("MARIO_O_JOGO")
 
 camera = Camera(700)
 
+# ==============================
+# PONTUAÇÃO DAS MOEDAS
+# ==============================
+fonte_moedas = pygame.font.Font(None, 28)
 
 # ==============================
 # CARREGAMENTO DAS IMAGENS
@@ -118,6 +122,7 @@ pedra_grande = pygame.transform.scale(
     pedra_img, (60, 60)
 )
 
+moedas = Moedas()
 # ==============================
 # VARIÁVEIS DO MARIO
 # ==============================
@@ -415,6 +420,16 @@ while running:
         mario_y = 310 
         mario_vel_y = 0
         mario_no_chao = True
+    # =============================
+    # COLETAR MOEDAS
+    # =============================
+    mario_rect = pygame.Rect(
+        int(mario_x),
+        int(mario_y),
+        30,
+        40
+    )
+    moedas.verificar_coleta(mario_rect)
 
     # ------------------------------
     # ATUALIZAR A CÂMERA
@@ -512,6 +527,10 @@ while running:
                 imagem_cano,
                 (cano_tela.x - 5, cano_tela.y)
             )
+        # ------------------------------
+        # DESENHAR MOEDAS
+        # ------------------------------
+        moedas.desenhar(tamanho_tela, camera)
 
         # ------------------------------
         # DESENHAR O MARIO
@@ -522,6 +541,17 @@ while running:
             tamanho_tela.blit(mario_flip, (mario_tela_x, mario_y))
         else:
             tamanho_tela.blit(mario_img, (mario_tela_x, mario_y))
+
+        # ==============================
+        # MOSTRAR PONTUAÇÃO
+        # ==============================
+        texto_moedas = fonte_moedas.render(
+            f"moedas: {moedas.pontuacao}",
+            True,
+            (255, 255, 255)
+        )
+
+        tamanho_tela.blit(texto_moedas, (15, 15))
 
         # ------------------------------
         # DESENHAR OS BOTÕES

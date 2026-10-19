@@ -18,6 +18,23 @@ clock = pygame.time.Clock()
 tamanho_tela = pygame.display.set_mode((700, 400))
 pygame.display.set_caption("MARIO_O_JOGO")
 
+from imagens import (
+    PASTA_IMAGENS,
+    chao_img,
+    chao_img_espelhado,
+    mario_img,
+    bloco_img,
+    cano_img,
+    fundo_img,
+    arvore1_img,
+    arvore2_img,
+    pedra_pequena,
+    pedra_media,
+    pedra_grande,
+    imagem_grama,
+    imagem_grama_2,
+)
+
 # ==============================
 # CÂMERA DO JOGO
 # ==============================
@@ -30,107 +47,13 @@ camera = Camera(700)
 fonte_moedas = pygame.font.Font(None, 28)
 
 # ==============================
-# CARREGAMENTO DAS IMAGENS
-# ==============================
-try:
-    chao_img = pygame.image.load("/home/gustavo/Imagens/Captura de tela de 2026-10-06 01-54-33.png").convert_alpha()
-    chao_img = pygame.transform.scale(chao_img, (700, 50))
-except Exception as e:
-    print(f"FALHA CHÃO: {e}")
-    chao_img = pygame.Surface((700, 50))
-    chao_img.fill((0, 200, 0))
-
-# Cópia espelhada (seu código original preservado)
-chao_img_espelhado = pygame.transform.flip(chao_img, True, False)
-
-try:
-    mario_img = pygame.image.load("/home/gustavo/Imagens/imagem_mario.png").convert_alpha()
-    mario_img = pygame.transform.scale(mario_img, (30, 40))
-except Exception as e:
-    print(f"FALHA MARIO: {e}")
-    mario_img = pygame.Surface((30, 40))
-    mario_img.fill((255, 0, 0))
-
-# ==============================
-# IMAGEM DOS BLOCOS
-# ==============================
-try:
-    bloco_img = pygame.image.load("/home/gustavo/Imagens/bloco.png").convert_alpha()
-    bloco_img = pygame.transform.scale(bloco_img, (40, 30))
-except Exception as e:
-    print(f"FALHA BLOCO: {e}")
-    bloco_img = pygame.Surface((40, 30))
-    bloco_img.fill((200, 100, 0))
-
-# ==============================
-# IMAGEM DOS CANOS
-# ==============================
-
-cano_img = pygame.image.load(
-    "/home/gustavo/Imagens/tobo_mario.png"
-)
-# ==============================
-# IMAGEM DE FUNDO
-# ==============================
-try:
-    fundo_original = pygame.image.load("/home/gustavo/Imagens/file.enc").convert()
-    altura_fundo = 400
-    largura_original = fundo_original.get_width()
-    altura_original = fundo_original.get_height()
-    largura_fundo = int(largura_original * altura_fundo / altura_original)
-    fundo_img = pygame.transform.scale(fundo_original, (largura_fundo, altura_fundo))
-except Exception as e:
-    print(f"FALHA FUNDO file.enc: {e} - usando fundo azul temporário")
-    fundo_img = pygame.Surface((700, 400))
-    fundo_img.fill((92, 148, 252))
-
-# ==============================
-# IMAGENS DAS ÁRVORES
-# ==============================
-arvore1_img = pygame.image.load(
-    "/home/gustavo/Imagens/ar1.png"
-).convert_alpha()
-
-arvore2_img = pygame.image.load(
-    "/home/gustavo/Imagens/ar2.png"
-).convert_alpha()
-
-# Ajustar o tamanho das árvores
-arvore1_img = pygame.transform.scale(
-    arvore1_img, (165, 203)
-)
-
-arvore2_img = pygame.transform.scale(
-    arvore2_img, (188, 204)
-)
-
-# ==============================
-# IMAGEM DA PEDRA
-# ==============================
-
-pedra_img = pygame.image.load(
-    "/home/gustavo/Imagens/imagem_pedra.png"
-).convert_alpha()
-
-pedra_pequena = pygame.transform.scale(
-    pedra_img, (30, 30)
-)
-
-pedra_media = pygame.transform.scale(
-    pedra_img, (45, 45)
-)
-
-pedra_grande = pygame.transform.scale(
-    pedra_img, (60, 60)
-)
-# ==============================
 # IMAGEM DO CHECKPOINT
 # ==============================
 
 checkpoint = Checkpoint(
     10030,
     230,
-    "/home/gustavo/Imagens/imagem_check.png"
+    str(PASTA_IMAGENS / "imagem_check.png")
 )
 
 menu_checkpoint = MenuCheckpoint()
@@ -140,40 +63,6 @@ menu_checkpoint = MenuCheckpoint()
 # ======================
 
 moedas = Moedas()
-
-# ==============================
-# IMAGEM DA GRAMA
-# ==============================
-
-imagem_grama = pygame.image.load(
-    "/home/gustavo/Imagens/imagem_grama.png"
-).convert_alpha()
-
-imagem_grama = pygame.transform.scale(
-    imagem_grama, (100, 40)
-)
-
-# ==============================
-# IMAGEM DA SEGUNDA GRAMA
-# ==============================
-
-imagem_grama_2 = pygame.image.load(
-    "/home/gustavo/Imagens/imagem_grama_2.png"
-).convert_alpha()
-
-LARGURA_GRAMA_2 = 100
-altura_original = imagem_grama_2.get_height()
-largura_original = imagem_grama_2.get_width()
-
-ALTURA_GRAMA_2 = int(
-    altura_original * LARGURA_GRAMA_2 / largura_original
-)
-
-imagem_grama_2 = pygame.transform.scale(
-    imagem_grama_2,
-    (LARGURA_GRAMA_2, ALTURA_GRAMA_2)
-)
-
 
 # ==============================
 # VARIÁVEIS DO MARIO

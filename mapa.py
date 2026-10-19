@@ -125,5 +125,51 @@ def criar_canos():
         pygame.Rect(9820, 270, 60, 80),
 
     ]
-
     return canos
+# ==============================
+# CRIAR GRAMA DO CENÁRIO
+# ==============================
+
+def criar_grama():
+
+    import random
+
+    gramas = []
+    x = 40
+
+    while x < LARGURA_MAPA - 100:
+
+        gramas.append(
+            (x, ALTURA_CHAO - 40)
+        )
+
+        # Menor intervalo = mais grama
+        x += random.randint(100, 180)
+
+    return gramas
+
+
+# ==============================
+# CRIAR SEGUNDA GRAMA DO CENÁRIO
+# ==============================
+
+def criar_grama_2(altura=60):
+
+    import random
+
+    gramas = []
+    x = 100
+
+    while x < LARGURA_MAPA - 100:
+
+        # Ajuste vertical da segunda grama
+        AJUSTE_ALTURA = 29
+
+        gramas.append(
+            (x, ALTURA_CHAO - altura - AJUSTE_ALTURA)
+        )
+
+        # Espaçamento menor para aumentar a quantidade
+        x += random.randint(180, 280)
+
+    return gramas

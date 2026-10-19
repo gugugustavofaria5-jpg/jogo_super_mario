@@ -3,7 +3,7 @@
 # ==============================
 import pygame
 import random
-from mapa import criar_plataformas, criar_canos
+from mapa import criar_plataformas, criar_canos, criar_grama, criar_grama_2
 from checkpoint import Checkpoint
 from menu_checkpoint import MenuCheckpoint
 from cenario import Cenario
@@ -44,7 +44,7 @@ except Exception as e:
 chao_img_espelhado = pygame.transform.flip(chao_img, True, False)
 
 try:
-    mario_img = pygame.image.load("/home/gustavo/Imagens/imagem de mario 2.0.webp").convert_alpha()
+    mario_img = pygame.image.load("/home/gustavo/Imagens/imagem_mario.png").convert_alpha()
     mario_img = pygame.transform.scale(mario_img, (30, 40))
 except Exception as e:
     print(f"FALHA MARIO: {e}")
@@ -97,11 +97,11 @@ arvore2_img = pygame.image.load(
 
 # Ajustar o tamanho das árvores
 arvore1_img = pygame.transform.scale(
-    arvore1_img, (110, 135)
+    arvore1_img, (165, 203)
 )
 
 arvore2_img = pygame.transform.scale(
-    arvore2_img, (125, 135)
+    arvore2_img, (188, 204)
 )
 
 # ==============================
@@ -140,6 +140,41 @@ menu_checkpoint = MenuCheckpoint()
 # ======================
 
 moedas = Moedas()
+
+# ==============================
+# IMAGEM DA GRAMA
+# ==============================
+
+imagem_grama = pygame.image.load(
+    "/home/gustavo/Imagens/imagem_grama.png"
+).convert_alpha()
+
+imagem_grama = pygame.transform.scale(
+    imagem_grama, (100, 40)
+)
+
+# ==============================
+# IMAGEM DA SEGUNDA GRAMA
+# ==============================
+
+imagem_grama_2 = pygame.image.load(
+    "/home/gustavo/Imagens/imagem_grama_2.png"
+).convert_alpha()
+
+LARGURA_GRAMA_2 = 100
+altura_original = imagem_grama_2.get_height()
+largura_original = imagem_grama_2.get_width()
+
+ALTURA_GRAMA_2 = int(
+    altura_original * LARGURA_GRAMA_2 / largura_original
+)
+
+imagem_grama_2 = pygame.transform.scale(
+    imagem_grama_2,
+    (LARGURA_GRAMA_2, ALTURA_GRAMA_2)
+)
+
+
 # ==============================
 # VARIÁVEIS DO MARIO
 # ==============================
@@ -194,6 +229,8 @@ menu_checkpoint_ativo = False
 # ------------------------------
 plataformas = criar_plataformas()
 canos = criar_canos()
+gramas_cenario = criar_grama()
+gramas_2_cenario = criar_grama_2()
 
 # ==============================
 # COMFIGURAR MOEDAS DO MAPA
@@ -211,7 +248,7 @@ posicoes_arvores = []
 x = 120
 
 while x < 10100:
-    x += random.randint(300, 480)
+    x += random.randint(150, 280)
     posicoes_arvores.append(x)
 
 for pos_x in posicoes_arvores:
@@ -268,7 +305,7 @@ while x < 10100:
         pedra_grande
     ])
 
-    pedra_y = 350 - imagem.get_height() + 13
+    pedra_y = 350 - imagem.get_height() + 10
 
     pedras_cenario.append(
         (imagem, x, pedra_y)
@@ -562,7 +599,31 @@ while running:
             ):
                 tamanho_tela.blit(chao_img, (x, 350))
 
+        # ==============================
+        # DESENHAR GRAMA NO CENÁRIO
+        # ==============================
 
+        for grama_x, grama_y in gramas_cenario:
+            grama_tela_x = grama_x - camera.x
+
+            if -100 < grama_tela_x < 700:
+                tamanho_tela.blit(
+                    imagem_grama,
+                    (grama_tela_x, grama_y)
+                )
+
+        # ==============================
+        # DESENHAR SEGUNDA GRAMA
+        # ==============================
+
+        for grama_2_x, grama_2_y in gramas_2_cenario:
+            grama_2_tela_x = grama_2_x - camera.x
+
+            if -100 < grama_2_tela_x < 700:
+                tamanho_tela.blit(
+                    imagem_grama_2,
+                    (grama_2_tela_x, grama_2_y)
+                )
 
         # ==============================
         # DESENHAR ÁRVORES DECORATIVAS
@@ -577,6 +638,17 @@ while running:
                     (arvore_tela_x, arvore_y)
                 )
 
+        # ==============================
+        # DESENHAR A GRAMA (TESTE)
+        # ==============================
+
+        posicao_grama = camera.aplicar(
+            pygame.Rect(500, 310, 100, 40)
+        )
+        tamanho_tela.blit(
+            imagem_grama,
+            posicao_grama
+        )
 
         # ==============================
         # DESENHAR PEDRAS
